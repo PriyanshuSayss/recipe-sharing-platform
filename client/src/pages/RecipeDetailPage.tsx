@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
-import { Clock, Users, Tag, ArrowLeft, Edit, Trash2, Star, ChevronUp, ChevronDown } from 'lucide-react';
-import { useRecipe, useDeleteRecipe } from '../features/recipes/hooks';
+import { Clock, Users, Tag, ArrowLeft, Edit, Trash2, Star, ChevronUp, ChevronDown, Bookmark, ShoppingCart, Check } from 'lucide-react';
+import { useRecipe, useDeleteRecipe, useIsRecipeSaved, useToggleSaveRecipe } from '../features/recipes/hooks';
 import { useReviews, useUpsertReview, useDeleteReview } from '../features/reviews/hooks';
 import { useAuth } from '../features/auth/AuthContext';
+import { useShopping } from '../features/shopping/ShoppingContext';
 import { LoadingSpinner, ErrorMessage } from '../components/States';
 import StarRating from '../components/StarRating';
 import { scaleQuantity, formatQuantity } from '../utils/scaling';
@@ -12,9 +13,12 @@ export default function RecipeDetailPage() {
   const { slug } = useParams<{ slug: string }>();
   const { user } = useAuth();
   const navigate = useNavigate();
+  const { addRecipeToShoppingList } = useShopping();
 
   const { data: recipe, isLoading, isError } = useRecipe(slug!);
   const { data: reviewData, isLoading: reviewsLoading } = useReviews(recipe?._id ?? '');
+  const { data: isSaved = false } = useIsRecipeSaved(recipe?._id ?? '');
+  const toggleSave = useToggleSaveRecipe(recipe?._id ?? '');
 
   const deleteRecipe = useDeleteRecipe();
   const upsertReview = useUpsertReview(recipe?._id ?? '');
@@ -25,9 +29,25 @@ export default function RecipeDetailPage() {
   const [reviewRating, setReviewRating] = useState(5);
   const [reviewText, setReviewText] = useState('');
   const [reviewError, setReviewError] = useState('');
+  const [addedToCart, setAddedToCart] = useState(false);
 
   const currentServings = servings ?? recipe?.originalServings ?? 1;
   const isOwner = user && recipe && user._id === recipe.author._id;
+
+  const handleToggleSave = () => {
+    if (!user) {
+      navigate('/login');
+      return;
+    }
+    toggleSave.mutate(isSaved);
+  };
+
+  const handleAddToShoppingList = () => {
+    if (!recipe) return;
+    addRecipeToShoppingList(recipe, currentServings);
+    setAddedToCart(true);
+    setTimeout(() => setAddedToCart(false), 2000);
+  };
 
   const handleServingsChange = (delta: number) => {
     const next = currentServings + delta;
@@ -80,7 +100,7 @@ export default function RecipeDetailPage() {
       </Link>
 
       {/* Header */}
-      <div className="flex items-start justify-between gap-4 mb-6">
+      <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-4 mb-6">
         <div>
           <div className="flex flex-wrap gap-1 mb-2">
             {recipe.tags.map(tag => (
@@ -94,19 +114,45 @@ export default function RecipeDetailPage() {
             by <span className="text-gray-700 font-medium">{recipe.author.displayName}</span>
           </p>
         </div>
-        {isOwner && (
-          <div className="flex gap-2 shrink-0">
-            <Link to={`/recipes/${recipe._id}/edit`} className="btn-secondary text-sm py-2 px-3 flex items-center gap-1">
-              <Edit className="w-4 h-4" /> Edit
-            </Link>
-            <button
-              onClick={() => setShowDeleteConfirm(true)}
-              className="btn-danger text-sm py-2 px-3 flex items-center gap-1"
-            >
-              <Trash2 className="w-4 h-4" /> Delete
-            </button>
-          </div>
-        )}
+
+        <div className="flex flex-wrap items-center gap-2 shrink-0">
+          {/* Save / Bookmark Button */}
+          <button
+            onClick={handleToggleSave}
+            disabled={toggleSave.isPending}
+            className={`btn-secondary text-sm py-2 px-3 flex items-center gap-1.5 transition-colors ${
+              isSaved ? 'bg-forest/10 border-forest text-forest' : ''
+            }`}
+            title={isSaved ? 'Remove from saved' : 'Save recipe to collection'}
+          >
+            <Bookmark className={`w-4 h-4 ${isSaved ? 'fill-forest text-forest' : ''}`} />
+            {isSaved ? 'Saved' : 'Save Recipe'}
+          </button>
+
+          {/* Add to Shopping List Button */}
+          <button
+            onClick={handleAddToShoppingList}
+            className="btn-primary text-sm py-2 px-3 flex items-center gap-1.5"
+            title="Add ingredients to shopping list"
+          >
+            {addedToCart ? <Check className="w-4 h-4 text-brand-200" /> : <ShoppingCart className="w-4 h-4" />}
+            {addedToCart ? 'Added!' : 'Add to Shopping List'}
+          </button>
+
+          {isOwner && (
+            <>
+              <Link to={`/recipes/${recipe._id}/edit`} className="btn-secondary text-sm py-2 px-3 flex items-center gap-1">
+                <Edit className="w-4 h-4" /> Edit
+              </Link>
+              <button
+                onClick={() => setShowDeleteConfirm(true)}
+                className="btn-danger text-sm py-2 px-3 flex items-center gap-1"
+              >
+                <Trash2 className="w-4 h-4" /> Delete
+              </button>
+            </>
+          )}
+        </div>
       </div>
 
       {/* Delete confirmation */}

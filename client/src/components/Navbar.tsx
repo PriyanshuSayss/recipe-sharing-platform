@@ -1,11 +1,13 @@
 import React from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { ChefHat, Search, PlusCircle, BookOpen, LogOut, User, Menu, X } from 'lucide-react';
+import { ChefHat, Search, PlusCircle, BookOpen, LogOut, User, Menu, X, Bookmark, ShoppingCart } from 'lucide-react';
 import { useAuth } from '../features/auth/AuthContext';
+import { useShopping } from '../features/shopping/ShoppingContext';
 import { useState } from 'react';
 
 export default function Navbar() {
   const { user, logout } = useAuth();
+  const { selectedRecipes } = useShopping();
   const navigate = useNavigate();
   const [menuOpen, setMenuOpen] = useState(false);
 
@@ -34,8 +36,21 @@ export default function Navbar() {
               <Search className="w-4 h-4" />
               Kitchen Search
             </Link>
+            <Link to="/shopping-list" className="text-gray-600 hover:text-forest transition-colors text-sm font-medium flex items-center gap-1.5 relative">
+              <ShoppingCart className="w-4 h-4" />
+              Shopping List
+              {selectedRecipes.length > 0 && (
+                <span className="w-4 h-4 rounded-full bg-coral text-white text-[10px] font-bold flex items-center justify-center">
+                  {selectedRecipes.length}
+                </span>
+              )}
+            </Link>
             {user && (
               <>
+                <Link to="/saved-recipes" className="text-gray-600 hover:text-forest transition-colors text-sm font-medium flex items-center gap-1">
+                  <Bookmark className="w-4 h-4" />
+                  Saved
+                </Link>
                 <Link to="/my-recipes" className="text-gray-600 hover:text-forest transition-colors text-sm font-medium flex items-center gap-1">
                   <BookOpen className="w-4 h-4" />
                   My Recipes
@@ -84,8 +99,17 @@ export default function Navbar() {
         <div className="md:hidden bg-white border-t border-gray-100 px-4 py-4 flex flex-col gap-3">
           <Link to="/" onClick={() => setMenuOpen(false)} className="text-gray-700 hover:text-forest py-1 text-sm font-medium">Browse Recipes</Link>
           <Link to="/kitchen-search" onClick={() => setMenuOpen(false)} className="text-gray-700 hover:text-forest py-1 text-sm font-medium">Kitchen Search</Link>
+          <Link to="/shopping-list" onClick={() => setMenuOpen(false)} className="text-gray-700 hover:text-forest py-1 text-sm font-medium flex items-center justify-between">
+            <span>Shopping List</span>
+            {selectedRecipes.length > 0 && (
+              <span className="px-2 py-0.5 rounded-full bg-coral text-white text-xs font-bold">
+                {selectedRecipes.length}
+              </span>
+            )}
+          </Link>
           {user ? (
             <>
+              <Link to="/saved-recipes" onClick={() => setMenuOpen(false)} className="text-gray-700 hover:text-forest py-1 text-sm font-medium">Saved Recipes</Link>
               <Link to="/my-recipes" onClick={() => setMenuOpen(false)} className="text-gray-700 hover:text-forest py-1 text-sm font-medium">My Recipes</Link>
               <Link to="/recipes/new" onClick={() => setMenuOpen(false)} className="text-gray-700 hover:text-forest py-1 text-sm font-medium">New Recipe</Link>
               <hr className="border-gray-100" />

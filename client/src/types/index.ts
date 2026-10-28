@@ -72,3 +72,13 @@ export interface IngredientSearchResult {
   matchCount: number;
   matchPercent: number;
 }
+
+export interface AggregatedShoppingItem {
+  id: string;
+  name: string;
+  normalizedName: string;
+  quantity: number;
+  displayQuantity: string;
+  unit: string;
+  recipeTitles: string[];
+}

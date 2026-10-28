@@ -94,3 +94,52 @@ export function useIngredientSearch() {
     },
   });
 }
+
+export function useSavedRecipes() {
+  return useQuery<{ recipes: Recipe[]; count: number }>({
+    queryKey: ['savedRecipes'],
+    queryFn: async () => {
+      const res = await api.get('/recipes/saved');
+      return res.data.data;
+    },
+  });
+}
+
+export function useIsRecipeSaved(recipeId: string) {
+  return useQuery<boolean>({
+    queryKey: ['isSaved', recipeId],
+    queryFn: async () => {
+      const res = await api.get(`/recipes/${recipeId}/is-saved`);
+      return res.data.data.isSaved;
+    },
+    enabled: !!recipeId,
+  });
+}
+
+export function useToggleSaveRecipe(recipeId: string) {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: async (currentlySaved: boolean) => {
+      if (currentlySaved) {
+        await api.delete(`/recipes/${recipeId}/save`);
+        return false;
+      } else {
+        await api.post(`/recipes/${recipeId}/save`);
+        return true;
+      }
+    },
+    onSuccess: (isSaved) => {
+      qc.setQueryData(['isSaved', recipeId], isSaved);
+      qc.invalidateQueries({ queryKey: ['savedRecipes'] });
+    },
+  });
+}
+
+export function useAggregateShoppingList() {
+  return useMutation({
+    mutationFn: async (items: Array<{ recipeId: string; servings?: number }>) => {
+      const res = await api.post('/shopping-list/aggregate', { items });
+      return res.data.data;
+    },
+  });
+}

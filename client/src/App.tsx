@@ -8,7 +8,10 @@ import LoginPage from './pages/LoginPage';
 import RegisterPage from './pages/RegisterPage';
 import MyRecipesPage from './pages/MyRecipesPage';
 import KitchenSearchPage from './pages/KitchenSearchPage';
+import SavedRecipesPage from './pages/SavedRecipesPage';
+import ShoppingListPage from './pages/ShoppingListPage';
 import { AuthProvider, useAuth } from './features/auth/AuthContext';
+import { ShoppingProvider } from './features/shopping/ShoppingContext';
 import { LoadingSpinner } from './components/States';
 
 function ProtectedRoute({ children }: { children: React.ReactNode }) {
@@ -34,10 +37,19 @@ function AppContent() {
           <Route path="/" element={<HomePage />} />
           <Route path="/recipes/:slug" element={<RecipeDetailPage />} />
           <Route path="/kitchen-search" element={<KitchenSearchPage />} />
+          <Route path="/shopping-list" element={<ShoppingListPage />} />
           <Route path="/login" element={<LoginPage />} />
           <Route path="/register" element={<RegisterPage />} />
           
           {/* Protected Routes */}
+          <Route
+            path="/saved-recipes"
+            element={
+              <ProtectedRoute>
+                <SavedRecipesPage />
+              </ProtectedRoute>
+            }
+          />
           <Route
             path="/recipes/new"
             element={
@@ -80,7 +92,9 @@ function AppContent() {
 export default function App() {
   return (
     <AuthProvider>
-      <AppContent />
+      <ShoppingProvider>
+        <AppContent />
+      </ShoppingProvider>
     </AuthProvider>
   );
 }

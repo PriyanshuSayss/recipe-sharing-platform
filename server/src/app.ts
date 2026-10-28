@@ -8,6 +8,7 @@ import { config } from './config/env';
 import authRoutes from './routes/auth.routes';
 import recipeRoutes from './routes/recipe.routes';
 import uploadRoutes from './routes/upload.routes';
+import shoppingListRoutes from './routes/shoppingList.routes';
 import { errorHandler } from './middleware/error.middleware';
 
 const app = express();
@@ -59,6 +60,7 @@ app.use(
 app.use('/api/auth', authRoutes);
 app.use('/api/recipes', recipeRoutes);
 app.use('/api/uploads', uploadRoutes);
+app.use('/api/shopping-list', shoppingListRoutes);
 
 // Health check
 app.get('/api/health', (_req, res) => {

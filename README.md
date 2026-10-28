@@ -58,6 +58,18 @@ Plateful empowers home cooks and culinary enthusiasts to discover, create, and a
 - Re-encodes uploaded files through `sharp` to strip malicious payloads or embedded scripts.
 - Stores files with UUID identifiers in protected local directories with path traversal safeguards.
 
+### 🔖 Stretch Feature 1: Saved Recipes & Collections
+- Authenticated users can bookmark recipes to their personal saved collection with a single click.
+- Database-level compound unique index on `{ user: 1, recipe: 1 }` prevents duplicate saves.
+- Dedicated `/saved-recipes` collection dashboard with instant remove/unsave actions.
+
+### 🛒 Stretch Feature 2: Aggregated Multi-Recipe Shopping List
+- Users can add multiple recipes to their shopping list directly from recipe pages with custom serving sizes.
+- **Unit Compatibility Arithmetic Engine**: Automatically sums quantities for identical normalized ingredients with compatible units (e.g. 2 cups flour + 1 cup flour = 3 cups flour).
+- **Incompatible Unit Protection**: Never sums incompatible units together (e.g. 200g sugar vs 1 cup sugar are kept as distinct, labeled line items).
+- Interactive checklist to cross off acquired items in the supermarket.
+- One-click print stylesheet support (`window.print()`) and mobile-friendly responsive layout.
+
 ---
 
 ## 3. Technology Stack
@@ -246,6 +258,15 @@ The seed script creates the following demo accounts:
 - `PUT /api/recipes/:id/review` — Upsert rating and review (Authenticated)
 - `DELETE /api/recipes/:id/review` — Delete user's review (Authenticated)
 
+### Collections (Saved Recipes) Endpoints
+- `GET /api/recipes/saved` — List authenticated user's bookmarked recipes
+- `POST /api/recipes/:id/save` — Save recipe to collection
+- `DELETE /api/recipes/:id/save` — Remove recipe from collection
+- `GET /api/recipes/:id/is-saved` — Check if recipe is saved by current user
+
+### Shopping List Endpoints
+- `POST /api/shopping-list/aggregate` — Aggregate ingredients across multiple recipes with serving scaling and unit compatibility logic
+
 ### Media Uploads
 - `POST /api/uploads/recipe-image` — Multipart form upload (`image` field, max 5MB, JPEG/PNG/WebP)
 
@@ -253,18 +274,19 @@ The seed script creates the following demo accounts:
 
 ## 11. Automated Test Suite
 
-Plateful features an automated test suite with **56 passing test cases** across unit and integration suites using `Vitest`, `Supertest`, and an isolated in-memory MongoDB environment (`mongodb-memory-server`):
+Plateful features an automated test suite with **71 passing test cases** across unit and integration suites using `Vitest`, `Supertest`, and an isolated in-memory MongoDB environment (`mongodb-memory-server`):
 
 ```bash
 npm run test --workspace=server
 ```
 
 ### Verified Test Coverage Highlights:
-- **Serving Scaling**: Two-to-three servings, downward scaling, floating-point drift prevention, zero/negative rejection, non-finite values, and fraction conversions.
-- **Recipe Management**: Valid creation, validation failures, unauthorized edits, title and tag searches.
-- **Pantry Search**: Ingredient matching, missing ingredient computation, ranking, and empty edge cases.
-- **Reviews & Ratings**: Review creation, in-place updates, rate limit safety, average rating calculation across multiple users, and database-level unique index enforcement.
-- **Upload Security**: Non-authenticated rejection, invalid file signature rejection, HTML/executable masquerading rejection, and oversized (>5MB) rejection.
+- **Serving Scaling**: Two-to-three servings, downward scaling, floating-point drift prevention, zero/negative rejection, non-finite values, and fraction conversions (31 unit tests).
+- **Shopping List Unit Logic**: Plural/singular normalization, identical unit summation, and strict separation of incompatible units without silent arithmetic errors (7 unit tests).
+- **Recipe Management & Pantry Discovery**: Valid creation, validation failures, unauthorized edits, title and tag searches, ingredient matching, and missing ingredient computation (16 integration tests).
+- **Reviews & Ratings**: Review creation, in-place updates, rate limit safety, average rating calculation across multiple users, and database-level unique index enforcement (6 integration tests).
+- **Upload Security**: Non-authenticated rejection, invalid file signature rejection, HTML/executable masquerading rejection, and oversized (>5MB) rejection (4 integration tests).
+- **Stretch Collections & Shopping Endpoints**: Bookmark toggle, duplicate save prevention, collection listing, and multi-recipe shopping list aggregation (7 integration tests).
 
 ---
 

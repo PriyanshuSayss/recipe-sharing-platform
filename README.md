@@ -15,19 +15,25 @@ Plateful empowers home cooks and culinary enthusiasts to discover, create, and a
 
 ## 2. Key Implemented Features
 
-### 🍽 Recipe Creation & Management
+### 🍽 Recipe Creation & Multi-Cuisine Catalog
+- **50+ Complete, Realistic Recipes** across 10+ culinary traditions with distinct ingredients, regional authenticities, and instructions.
+- Regional Indian cuisines: North Indian, South Indian (Chettinad, Kerala, Udupi, Hyderabadi), West & East Indian (Gujarati, Maharashtrian, Bengali, Bihari).
+- Global cuisines: Italian, Chinese, Indo-Chinese, Japanese, Thai, Mexican, Korean, Mediterranean, Middle Eastern, American, French, and Spanish.
+- Dietary classifications: `Vegetarian`, `Vegan`, `Eggetarian`, `Non-Vegetarian` with rich dietary tags (`Gluten-Free`, `High-Protein`, `Dairy-Free`, `Nut-Free`).
 - Structured ingredient builder: quantity, supported culinary unit, and ingredient name.
 - Dynamic addition and removal of ingredient rows and numbered cooking instructions.
 - Recipe photograph uploads with server-side validation (magic bytes, MIME type, Sharp re-encoding, size limits).
 - Full CRUD operations with author-only edit and delete authorization.
 - "My Recipes" management dashboard with confirmation modals.
-- Friendly, human-readable SEO slugs (e.g. `/recipes/classic-pancakes`).
+- Friendly, human-readable SEO slugs (e.g. `/recipes/paneer-butter-masala`).
 
-### 🔍 Discovery, Search & Filtering
-- Instant debounced search querying recipe titles and tags.
-- Tag/category filtering (`breakfast`, `dinner`, `vegan`, `quick`, `pasta`, `dessert`, etc.).
+### 🔍 Discovery, Search & Advanced Multi-Filter
+- **Visual Cuisine Explorer**: Interactive carousel and badge filtering across global cuisines.
+- **Semantic Dietary Filtering**: Selecting `Vegetarian` queries both Vegetarian and Vegan dishes ($Vegan \subset Vegetarian$), ensuring full dietary discovery.
+- **Multi-Filter Combination**: Query by Cuisine + Dietary + Meal Type + Maximum Cooking Time simultaneously.
+- Instant debounced search querying recipe titles, tags, descriptions, and cuisines.
 - Paginated results with loading, error, and empty state handling.
-- Card metrics displaying prep time, author, original servings, and dynamic average star ratings.
+- Card metrics displaying prep time, author, original servings, cuisine badge, dietary dot, and dynamic average star ratings.
 
 ### 🍳 "What Can I Cook?" Kitchen Search
 - Multi-ingredient input with case-normalization, whitespace trimming, and duplicate removal.
@@ -274,7 +280,7 @@ The seed script creates the following demo accounts:
 
 ## 11. Automated Test Suite
 
-Plateful features an automated test suite with **71 passing test cases** across unit and integration suites using `Vitest`, `Supertest`, and an isolated in-memory MongoDB environment (`mongodb-memory-server`):
+Plateful features a rigorous automated test suite with **83 passing test cases** across unit and integration suites using `Vitest`, `Supertest`, and MongoDB test isolation:
 
 ```bash
 npm run test --workspace=server
@@ -282,6 +288,7 @@ npm run test --workspace=server
 
 ### Verified Test Coverage Highlights:
 - **Serving Scaling**: Two-to-three servings, downward scaling, floating-point drift prevention, zero/negative rejection, non-finite values, and fraction conversions (31 unit tests).
+- **Multi-Cuisine Catalog & Semantic Filtering**: Catalog size (>= 48 complete recipes), global cuisine representation, slug uniqueness, strict & semantic dietary queries (vegetarian includes vegan), max cooking time, combined multi-filters, and search + cuisine integration (12 integration tests).
 - **Shopping List Unit Logic**: Plural/singular normalization, identical unit summation, and strict separation of incompatible units without silent arithmetic errors (7 unit tests).
 - **Recipe Management & Pantry Discovery**: Valid creation, validation failures, unauthorized edits, title and tag searches, ingredient matching, and missing ingredient computation (16 integration tests).
 - **Reviews & Ratings**: Review creation, in-place updates, rate limit safety, average rating calculation across multiple users, and database-level unique index enforcement (6 integration tests).

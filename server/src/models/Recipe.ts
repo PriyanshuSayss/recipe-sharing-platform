@@ -9,6 +9,15 @@ export const SUPPORTED_UNITS = [
 
 export type Unit = (typeof SUPPORTED_UNITS)[number];
 
+export const SUPPORTED_DIETARY = ['Vegetarian', 'Non-Vegetarian', 'Vegan', 'Eggetarian'] as const;
+export type DietaryClassification = (typeof SUPPORTED_DIETARY)[number];
+
+export const SUPPORTED_MEAL_TYPES = ['Breakfast', 'Lunch', 'Dinner', 'Snack', 'Dessert', 'Drink'] as const;
+export type MealType = (typeof SUPPORTED_MEAL_TYPES)[number];
+
+export const SUPPORTED_DIFFICULTIES = ['Easy', 'Medium', 'Hard'] as const;
+export type Difficulty = (typeof SUPPORTED_DIFFICULTIES)[number];
+
 export interface IIngredient {
   name: string;
   normalizedName: string;
@@ -32,6 +41,12 @@ export interface IRecipe extends Document {
   originalServings: number;
   cookingTimeMinutes: number;
   tags: string[];
+  cuisine: string;
+  cuisineRegion?: string;
+  dietary: DietaryClassification;
+  dietaryTags: string[];
+  mealType: MealType;
+  difficulty: Difficulty;
   ingredients: IIngredient[];
   instructions: IInstruction[];
   createdAt: Date;
@@ -129,6 +144,38 @@ const recipeSchema = new Schema<IRecipe>(
         message: 'Too many tags (maximum 20)',
       },
     },
+    cuisine: {
+      type: String,
+      required: true,
+      default: 'International',
+      trim: true,
+    },
+    cuisineRegion: {
+      type: String,
+      default: '',
+      trim: true,
+    },
+    dietary: {
+      type: String,
+      required: true,
+      enum: SUPPORTED_DIETARY,
+      default: 'Vegetarian',
+    },
+    dietaryTags: {
+      type: [String],
+      default: [],
+    },
+    mealType: {
+      type: String,
+      required: true,
+      enum: SUPPORTED_MEAL_TYPES,
+      default: 'Dinner',
+    },
+    difficulty: {
+      type: String,
+      enum: SUPPORTED_DIFFICULTIES,
+      default: 'Medium',
+    },
     ingredients: {
       type: [ingredientSchema],
       required: true,
@@ -152,9 +199,14 @@ const recipeSchema = new Schema<IRecipe>(
 );
 
 // Full-text search index
-recipeSchema.index({ title: 'text', tags: 'text' });
+recipeSchema.index({ title: 'text', tags: 'text', cuisine: 'text' });
 // Tag filter index
 recipeSchema.index({ tags: 1 });
+// Cuisine and dietary indexes
+recipeSchema.index({ cuisine: 1 });
+recipeSchema.index({ dietary: 1 });
+recipeSchema.index({ mealType: 1 });
+recipeSchema.index({ cookingTimeMinutes: 1 });
 // Ingredient search index
 recipeSchema.index({ 'ingredients.normalizedName': 1 });
 

@@ -1,15 +1,10 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Clock, Star, Users } from 'lucide-react';
-import { Recipe } from '../types';
+import { Clock, Star, Users, Globe2 } from 'lucide-react';
+import { Recipe, DietaryClassification } from '../types';
 
 interface Props {
   recipe: Recipe;
-}
-
-function formatRating(rating: number | null | undefined): string {
-  if (rating == null) return 'No ratings';
-  return rating.toFixed(1);
 }
 
 function getImageSrc(url: string): string {
@@ -17,26 +12,86 @@ function getImageSrc(url: string): string {
   return url;
 }
 
+function getDietaryBadge(dietary?: DietaryClassification) {
+  switch (dietary) {
+    case 'Vegetarian':
+      return {
+        label: 'Vegetarian',
+        classes: 'bg-emerald-50 text-emerald-800 border-emerald-200',
+        dot: 'bg-emerald-500',
+      };
+    case 'Vegan':
+      return {
+        label: 'Vegan',
+        classes: 'bg-green-50 text-green-800 border-green-300 font-medium',
+        dot: 'bg-green-600',
+      };
+    case 'Eggetarian':
+      return {
+        label: 'Egg',
+        classes: 'bg-amber-50 text-amber-800 border-amber-200',
+        dot: 'bg-amber-500',
+      };
+    case 'Non-Vegetarian':
+      return {
+        label: 'Non-Veg',
+        classes: 'bg-rose-50 text-rose-800 border-rose-200',
+        dot: 'bg-rose-500',
+      };
+    default:
+      return null;
+  }
+}
+
 export default function RecipeCard({ recipe }: Props) {
+  const dietaryBadge = getDietaryBadge(recipe.dietary);
+
   return (
-    <Link to={`/recipes/${recipe.slug}`} className="card group hover:shadow-card-hover transition-shadow duration-200 flex flex-col">
-      {/* Image */}
-      <div className="aspect-[4/3] overflow-hidden bg-gray-100">
+    <Link
+      to={`/recipes/${recipe.slug}`}
+      className="card group hover:shadow-card-hover transition-all duration-200 flex flex-col overflow-hidden border border-gray-200/80 hover:border-forest/40 bg-white rounded-2xl"
+    >
+      {/* Image Container */}
+      <div className="relative aspect-[4/3] overflow-hidden bg-gray-100">
         <img
           src={getImageSrc(recipe.imageUrl)}
           alt={recipe.title}
           className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
           loading="lazy"
         />
+
+        {/* Top Badges Overlay */}
+        <div className="absolute top-2.5 left-2.5 right-2.5 flex items-center justify-between gap-1 pointer-events-none">
+          {recipe.cuisine && (
+            <span className="text-xs font-semibold px-2.5 py-1 rounded-full bg-white/95 backdrop-blur-sm text-forest shadow-sm flex items-center gap-1 border border-brand-100">
+              <Globe2 className="w-3 h-3 text-forest" />
+              {recipe.cuisine}
+            </span>
+          )}
+
+          {dietaryBadge && (
+            <span
+              className={`text-xs px-2 py-0.5 rounded-full border shadow-sm backdrop-blur-sm bg-white/95 flex items-center gap-1.5 ${dietaryBadge.classes}`}
+            >
+              <span className={`w-2 h-2 rounded-full ${dietaryBadge.dot}`} />
+              {dietaryBadge.label}
+            </span>
+          )}
+        </div>
       </div>
 
       {/* Content */}
       <div className="p-4 flex flex-col flex-1">
         {/* Tags */}
         <div className="flex flex-wrap gap-1 mb-2">
-          {recipe.tags.slice(0, 3).map(tag => (
-            <span key={tag} className="text-xs px-2 py-0.5 bg-brand-50 text-forest rounded-full">
-              {tag}
+          {recipe.mealType && (
+            <span className="text-[11px] font-medium px-2 py-0.5 bg-brand-50 text-forest rounded-md">
+              {recipe.mealType}
+            </span>
+          )}
+          {recipe.tags.slice(0, 2).map((tag) => (
+            <span key={tag} className="text-[11px] px-2 py-0.5 bg-gray-100 text-gray-600 rounded-md">
+              #{tag}
             </span>
           ))}
         </div>
@@ -46,20 +101,21 @@ export default function RecipeCard({ recipe }: Props) {
           {recipe.title}
         </h3>
 
-        {/* Author */}
+        {/* Author / Subtitle */}
         <p className="text-xs text-gray-500 mb-3">
           by {typeof recipe.author === 'object' ? recipe.author.displayName : 'Unknown'}
+          {recipe.cuisineRegion && ` • ${recipe.cuisineRegion}`}
         </p>
 
         {/* Meta */}
-        <div className="mt-auto flex items-center justify-between text-xs text-gray-500">
+        <div className="mt-auto pt-3 border-t border-gray-100 flex items-center justify-between text-xs text-gray-500">
           <span className="flex items-center gap-1">
-            <Clock className="w-3.5 h-3.5" />
-            {recipe.cookingTimeMinutes} min
+            <Clock className="w-3.5 h-3.5 text-forest" />
+            {recipe.cookingTimeMinutes}m
           </span>
           <span className="flex items-center gap-1">
-            <Users className="w-3.5 h-3.5" />
-            Serves {recipe.originalServings}
+            <Users className="w-3.5 h-3.5 text-forest" />
+            {recipe.originalServings} serv
           </span>
           <span className="flex items-center gap-1 text-coral font-medium">
             <Star className="w-3.5 h-3.5 fill-coral text-coral" />

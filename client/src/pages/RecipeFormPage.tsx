@@ -15,6 +15,11 @@ const formSchema = z.object({
   originalServings: z.coerce.number().int().positive('Must be at least 1').max(1000),
   cookingTimeMinutes: z.coerce.number().int().positive('Must be at least 1 minute'),
   tags: z.string(),
+  cuisine: z.string().trim().min(1, 'Cuisine is required'),
+  cuisineRegion: z.string().trim().optional(),
+  dietary: z.enum(['Vegetarian', 'Vegan', 'Eggetarian', 'Non-Vegetarian']),
+  mealType: z.enum(['Breakfast', 'Lunch', 'Dinner', 'Snack', 'Dessert', 'Drink']),
+  difficulty: z.enum(['Easy', 'Medium', 'Hard']),
   ingredients: z.array(z.object({
     name: z.string().trim().min(1, 'Name required'),
     quantity: z.coerce.number().positive('Must be > 0'),
@@ -61,6 +66,11 @@ export default function RecipeFormPage({ mode = 'create' }: Props) {
           originalServings: existingRecipe.originalServings,
           cookingTimeMinutes: existingRecipe.cookingTimeMinutes,
           tags: existingRecipe.tags.join(', '),
+          cuisine: existingRecipe.cuisine || 'International',
+          cuisineRegion: existingRecipe.cuisineRegion || '',
+          dietary: existingRecipe.dietary || 'Vegetarian',
+          mealType: existingRecipe.mealType || 'Dinner',
+          difficulty: existingRecipe.difficulty || 'Medium',
           ingredients: existingRecipe.ingredients.map(i => ({
             name: i.name,
             quantity: i.quantity,
@@ -74,6 +84,11 @@ export default function RecipeFormPage({ mode = 'create' }: Props) {
           originalServings: 4,
           cookingTimeMinutes: 30,
           tags: '',
+          cuisine: 'Indian',
+          cuisineRegion: '',
+          dietary: 'Vegetarian',
+          mealType: 'Dinner',
+          difficulty: 'Medium',
           ingredients: [{ name: '', quantity: 1, unit: '' }],
           instructions: [{ text: '' }],
         },
@@ -120,6 +135,11 @@ export default function RecipeFormPage({ mode = 'create' }: Props) {
       originalServings: data.originalServings,
       cookingTimeMinutes: data.cookingTimeMinutes,
       tags,
+      cuisine: data.cuisine,
+      cuisineRegion: data.cuisineRegion || '',
+      dietary: data.dietary,
+      mealType: data.mealType,
+      difficulty: data.difficulty,
       imageUrl,
       ingredients: data.ingredients.map(i => ({
         name: i.name,
@@ -182,9 +202,62 @@ export default function RecipeFormPage({ mode = 'create' }: Props) {
             </div>
           </div>
 
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div>
+              <label className="label" htmlFor="cuisine">Cuisine *</label>
+              <input
+                id="cuisine"
+                {...register('cuisine')}
+                className="input"
+                placeholder="e.g. Indian, Italian, Mexican..."
+              />
+              {errors.cuisine && <p className="error-text">{errors.cuisine.message}</p>}
+            </div>
+            <div>
+              <label className="label" htmlFor="cuisineRegion">Regional Specialty (optional)</label>
+              <input
+                id="cuisineRegion"
+                {...register('cuisineRegion')}
+                className="input"
+                placeholder="e.g. North Indian, South Indian, Sicilian..."
+              />
+            </div>
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+            <div>
+              <label className="label" htmlFor="dietary">Dietary Classification *</label>
+              <select id="dietary" {...register('dietary')} className="input">
+                <option value="Vegetarian">Vegetarian</option>
+                <option value="Vegan">Vegan</option>
+                <option value="Eggetarian">Eggetarian</option>
+                <option value="Non-Vegetarian">Non-Vegetarian</option>
+              </select>
+            </div>
+            <div>
+              <label className="label" htmlFor="mealType">Meal Type *</label>
+              <select id="mealType" {...register('mealType')} className="input">
+                <option value="Breakfast">Breakfast</option>
+                <option value="Lunch">Lunch</option>
+                <option value="Dinner">Dinner</option>
+                <option value="Snack">Snack</option>
+                <option value="Dessert">Dessert</option>
+                <option value="Drink">Drink</option>
+              </select>
+            </div>
+            <div>
+              <label className="label" htmlFor="difficulty">Difficulty *</label>
+              <select id="difficulty" {...register('difficulty')} className="input">
+                <option value="Easy">Easy</option>
+                <option value="Medium">Medium</option>
+                <option value="Hard">Hard</option>
+              </select>
+            </div>
+          </div>
+
           <div>
             <label className="label" htmlFor="tags">Tags (comma-separated)</label>
-            <input id="tags" {...register('tags')} className="input" placeholder="e.g. breakfast, quick, vegetarian" />
+            <input id="tags" {...register('tags')} className="input" placeholder="e.g. curry, spicy, healthy" />
           </div>
         </div>
 

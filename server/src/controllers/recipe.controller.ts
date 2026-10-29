@@ -8,22 +8,59 @@ import { ZodError } from 'zod';
 
 export async function listRecipes(req: Request, res: Response, next: NextFunction): Promise<void> {
   try {
-    const { page, limit, q, tag } = recipeQuerySchema.parse(req.query);
+    const { page, limit, q, search, tag, cuisine, dietary, mealType, difficulty, maxCookingTime } =
+      recipeQuerySchema.parse(req.query);
     const skip = (page - 1) * limit;
 
     // Build query filter
     const filter: Record<string, unknown> = {};
 
-    if (q) {
-      const escaped = q.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+    const searchQuery = q || search;
+    if (searchQuery) {
+      const escaped = searchQuery.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
       filter.$or = [
         { title: { $regex: escaped, $options: 'i' } },
         { tags: { $regex: escaped, $options: 'i' } },
+        { cuisine: { $regex: escaped, $options: 'i' } },
+        { description: { $regex: escaped, $options: 'i' } },
       ];
     }
 
     if (tag) {
       filter.tags = { $regex: `^${tag}$`, $options: 'i' };
+    }
+
+    if (cuisine) {
+      // Support matching either cuisine or cuisineRegion
+      const escapedCuisine = cuisine.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+      filter.$or = filter.$or || [];
+      filter.cuisine = { $regex: `^${escapedCuisine}$`, $options: 'i' };
+    }
+
+    if (dietary) {
+      const dLower = dietary.toLowerCase().trim();
+      if (dLower === 'vegetarian') {
+        // Vegan is a strict subset of Vegetarian; returning both ensures complete vegetarian discovery
+        filter.dietary = { $in: [/^vegetarian$/i, /^vegan$/i] };
+      } else if (dLower === 'vegan') {
+        filter.dietary = /^vegan$/i;
+      } else if (dLower === 'eggetarian') {
+        filter.dietary = /^eggetarian$/i;
+      } else if (dLower === 'non-vegetarian') {
+        filter.dietary = /^non-vegetarian$/i;
+      }
+    }
+
+    if (mealType) {
+      filter.mealType = { $regex: `^${mealType}$`, $options: 'i' };
+    }
+
+    if (difficulty) {
+      filter.difficulty = { $regex: `^${difficulty}$`, $options: 'i' };
+    }
+
+    if (maxCookingTime) {
+      filter.cookingTimeMinutes = { $lte: maxCookingTime };
     }
 
     const [recipes, total] = await Promise.all([

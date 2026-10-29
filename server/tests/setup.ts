@@ -2,17 +2,26 @@ import { MongoMemoryServer } from 'mongodb-memory-server';
 import mongoose from 'mongoose';
 import { beforeAll, afterAll, beforeEach } from 'vitest';
 
-let mongod: MongoMemoryServer;
+let mongod: MongoMemoryServer | null = null;
 
 beforeAll(async () => {
-  mongod = await MongoMemoryServer.create();
-  const uri = mongod.getUri();
-  await mongoose.connect(uri);
+  const localUri = process.env.TEST_MONGODB_URI || 'mongodb://localhost:27017/plateful_test';
+  try {
+    // Attempt fast connection to local MongoDB instance
+    await mongoose.connect(localUri, { serverSelectionTimeoutMS: 2000 });
+  } catch {
+    // Fall back to memory server if local MongoDB is not running
+    mongod = await MongoMemoryServer.create();
+    const uri = mongod.getUri();
+    await mongoose.connect(uri);
+  }
 });
 
 afterAll(async () => {
   await mongoose.disconnect();
-  await mongod.stop();
+  if (mongod) {
+    await mongod.stop();
+  }
 });
 
 beforeEach(async () => {

@@ -7,12 +7,22 @@ export function useRecipes(params: {
   limit?: number;
   q?: string;
   tag?: string;
+  cuisine?: string;
+  dietary?: string;
+  mealType?: string;
+  difficulty?: string;
+  maxCookingTime?: number;
 }) {
   const searchParams = new URLSearchParams();
   if (params.page) searchParams.set('page', String(params.page));
   if (params.limit) searchParams.set('limit', String(params.limit));
   if (params.q) searchParams.set('q', params.q);
   if (params.tag) searchParams.set('tag', params.tag);
+  if (params.cuisine) searchParams.set('cuisine', params.cuisine);
+  if (params.dietary) searchParams.set('dietary', params.dietary);
+  if (params.mealType) searchParams.set('mealType', params.mealType);
+  if (params.difficulty) searchParams.set('difficulty', params.difficulty);
+  if (params.maxCookingTime) searchParams.set('maxCookingTime', String(params.maxCookingTime));
 
   return useQuery<RecipeListResponse>({
     queryKey: ['recipes', params],

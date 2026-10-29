@@ -102,13 +102,46 @@ export default function RecipeDetailPage() {
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-4 mb-6">
         <div>
-          <div className="flex flex-wrap gap-1 mb-2">
-            {recipe.tags.map(tag => (
-              <span key={tag} className="text-xs px-2 py-0.5 bg-brand-50 text-forest rounded-full border border-brand-200">
+          {/* Cuisine, Dietary & Meta Badges */}
+          <div className="flex flex-wrap items-center gap-1.5 mb-2.5">
+            {recipe.cuisine && (
+              <span className="text-xs font-semibold px-2.5 py-1 bg-brand-100 text-forest rounded-full border border-brand-200">
+                {recipe.cuisine}
+                {recipe.cuisineRegion && ` (${recipe.cuisineRegion})`}
+              </span>
+            )}
+            {recipe.dietary && (
+              <span
+                className={`text-xs font-medium px-2.5 py-1 rounded-full border ${
+                  recipe.dietary === 'Vegetarian'
+                    ? 'bg-emerald-50 text-emerald-800 border-emerald-200'
+                    : recipe.dietary === 'Vegan'
+                    ? 'bg-green-50 text-green-800 border-green-300'
+                    : recipe.dietary === 'Eggetarian'
+                    ? 'bg-amber-50 text-amber-800 border-amber-200'
+                    : 'bg-rose-50 text-rose-800 border-rose-200'
+                }`}
+              >
+                {recipe.dietary}
+              </span>
+            )}
+            {recipe.mealType && (
+              <span className="text-xs px-2.5 py-1 bg-gray-100 text-gray-700 rounded-full font-medium">
+                {recipe.mealType}
+              </span>
+            )}
+            {recipe.difficulty && (
+              <span className="text-xs px-2.5 py-1 bg-gray-50 text-gray-600 rounded-full border border-gray-200">
+                {recipe.difficulty}
+              </span>
+            )}
+            {recipe.dietaryTags?.map((tag) => (
+              <span key={tag} className="text-xs px-2 py-0.5 bg-blue-50 text-blue-700 rounded-full border border-blue-200">
                 {tag}
               </span>
             ))}
           </div>
+
           <h1 className="font-display text-3xl font-bold text-gray-900 mb-2 leading-tight">{recipe.title}</h1>
           <p className="text-gray-500 text-sm">
             by <span className="text-gray-700 font-medium">{recipe.author.displayName}</span>

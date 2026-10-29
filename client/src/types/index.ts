@@ -18,6 +18,10 @@ export interface Instruction {
   text: string;
 }
 
+export type DietaryClassification = 'Vegetarian' | 'Non-Vegetarian' | 'Vegan' | 'Eggetarian';
+export type MealType = 'Breakfast' | 'Lunch' | 'Dinner' | 'Snack' | 'Dessert' | 'Drink';
+export type Difficulty = 'Easy' | 'Medium' | 'Hard';
+
 export interface Recipe {
   _id: string;
   title: string;
@@ -29,6 +33,12 @@ export interface Recipe {
   originalServings: number;
   cookingTimeMinutes: number;
   tags: string[];
+  cuisine?: string;
+  cuisineRegion?: string;
+  dietary?: DietaryClassification;
+  dietaryTags?: string[];
+  mealType?: MealType;
+  difficulty?: Difficulty;
   ingredients: Ingredient[];
   instructions: Instruction[];
   averageRating?: number | null;

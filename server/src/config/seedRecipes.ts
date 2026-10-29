@@ -378,7 +378,7 @@ export const SEED_RECIPES: SeedRecipeItem[] = [
     cuisine: 'Indian',
     cuisineRegion: 'South Indian',
     dietary: 'Vegan',
-    dietaryTags: ['Gluten-Free', 'Dairy-Free', 'Nut-Free'],
+    dietaryTags: ['Gluten-Free', 'Dairy-Free'],
     mealType: 'Lunch',
     difficulty: 'Easy',
     originalServings: 3,
@@ -400,7 +400,7 @@ export const SEED_RECIPES: SeedRecipeItem[] = [
       { stepNumber: 2, text: 'Heat sesame oil in a small pan. Crackle mustard seeds, then add peanuts and fry until golden.' },
       { stepNumber: 3, text: 'Add curry leaves and split green chilies; fry for 30 seconds until crisp.' },
       { stepNumber: 4, text: 'Pour the hot seasoning over the rice, add lemon juice, and gently toss with a flat spoon.' },
-      { stepNumber: 5, text: 'Rest for 10 minutes for flavors to absorb before serving with papad or yogurt.' },
+      { stepNumber: 5, text: 'Rest for 10 minutes for flavors to absorb before serving with papad, roasted coconut chutney, or pickle.' },
     ],
   },
   {
@@ -1017,7 +1017,7 @@ export const SEED_RECIPES: SeedRecipeItem[] = [
       { name: 'Silken tofu cut into small cubes', normalizedName: 'silken tofu', quantity: 150, unit: 'g' },
       { name: 'White miso paste', normalizedName: 'miso paste', quantity: 3, unit: 'tbsp' },
       { name: 'Dried wakame seaweed', normalizedName: 'wakame', quantity: 1, unit: 'tbsp' },
-      { name: 'Vegetable dashi or kombu stock', normalizedName: 'kombu stock', quantity: 3, unit: 'cups' },
+      { name: 'Kombu kelp dashi (vegetarian seaweed stock)', normalizedName: 'kombu dashi stock', quantity: 3, unit: 'cups' },
       { name: 'Scallions thinly sliced', normalizedName: 'scallions', quantity: 2, unit: 'piece' },
     ],
     instructions: [
@@ -1141,7 +1141,7 @@ export const SEED_RECIPES: SeedRecipeItem[] = [
     tags: ['curry', 'thai', 'coconut', 'vegan', 'green-curry'],
     imageUrl: 'https://images.unsplash.com/photo-1455619452474-d2be8b1e70cd?w=800&q=80',
     ingredients: [
-      { name: 'Thai green curry paste (vegetarian)', normalizedName: 'green curry paste', quantity: 3, unit: 'tbsp' },
+      { name: 'Vegan Thai green curry paste (plant-based)', normalizedName: 'green curry paste', quantity: 3, unit: 'tbsp' },
       { name: 'Coconut milk', normalizedName: 'coconut milk', quantity: 400, unit: 'ml' },
       { name: 'Thai eggplants or zucchini chunks', normalizedName: 'eggplants or zucchini', quantity: 1.5, unit: 'cups' },
       { name: 'Bamboo shoots sliced', normalizedName: 'bamboo shoots', quantity: 0.5, unit: 'cup' },
@@ -1152,7 +1152,7 @@ export const SEED_RECIPES: SeedRecipeItem[] = [
     ],
     instructions: [
       { stepNumber: 1, text: 'Heat coconut oil in a saucepan, fry green curry paste for 2 minutes until intensely fragrant.' },
-      { stepNumber: 2, text: 'Add 1/2 cup coconut milk and stir until the green oil separates from the cream.' },
+      { stepNumber: 2, text: 'Add 1/2 cup coconut milk and stir until the green oil separates from the thick coconut cream.' },
       { stepNumber: 3, text: 'Pour in remaining coconut milk, add eggplants and bamboo shoots; simmer for 15 minutes.' },
       { stepNumber: 4, text: 'Season with soy sauce and brown sugar.' },
       { stepNumber: 5, text: 'Remove from heat, fold in fresh Thai basil leaves, and serve with steaming jasmine rice.' },
@@ -1294,7 +1294,7 @@ export const SEED_RECIPES: SeedRecipeItem[] = [
     description:
       'Warm white rice topped with seasoned sautéed vegetables, crispy tofu, gochujang chili sauce, and toasted sesame oil.',
     cuisine: 'Korean',
-    dietary: 'Vegetarian',
+    dietary: 'Vegan',
     dietaryTags: ['Dairy-Free', 'High-Protein'],
     mealType: 'Dinner',
     difficulty: 'Medium',
@@ -1747,7 +1747,7 @@ export const SEED_RECIPES: SeedRecipeItem[] = [
     description:
       'Decadent, rich chocolate brownies with paper-thin crackly tops, super fudgy centers, and bittersweet chocolate chunks.',
     cuisine: 'American',
-    dietary: 'Vegetarian',
+    dietary: 'Eggetarian',
     dietaryTags: ['Nut-Free'],
     mealType: 'Dessert',
     difficulty: 'Easy',
@@ -1771,6 +1771,184 @@ export const SEED_RECIPES: SeedRecipeItem[] = [
       { stepNumber: 3, text: 'Gently fold melted chocolate into the whipped eggs.' },
       { stepNumber: 4, text: 'Sift in flour and cocoa powder; fold with a spatula until just combined.' },
       { stepNumber: 5, text: 'Pour into an 8x8 parchment-lined pan and bake at 175°C (350°F) for 22–25 minutes until toothpick comes out with moist crumbs.' },
+    ],
+  },
+
+  // ─── Legacy demo recipes (originally from seed.ts) ───────────────────────
+  // These 5 recipes were present in the original seed data. They are included
+  // here so that `npm run seed` remains fully idempotent across all demo data.
+
+  {
+    title: 'Chocolate Chip Cookies',
+    slug: 'chocolate-chip-cookies',
+    description:
+      'The ultimate chewy chocolate chip cookies with crispy edges, soft centers, and perfectly melted chocolate pools. This recipe has been perfected over years.',
+    cuisine: 'American',
+    cuisineRegion: 'American',
+    dietary: 'Eggetarian',           // contains eggs — not vegan/vegetarian
+    dietaryTags: ['Vegetarian'],
+    mealType: 'Dessert',
+    difficulty: 'Easy',
+    originalServings: 24,
+    cookingTimeMinutes: 35,
+    tags: ['baking', 'dessert', 'cookies'],
+    imageUrl: 'https://images.unsplash.com/photo-1499636136210-6f4ee915583e?w=800&q=80',
+    ingredients: [
+      { name: 'All-purpose flour', normalizedName: 'flour', quantity: 2.25, unit: 'cups' },
+      { name: 'Butter', normalizedName: 'butter', quantity: 1, unit: 'cups' },
+      { name: 'Brown sugar', normalizedName: 'brown sugar', quantity: 0.75, unit: 'cups' },
+      { name: 'Granulated sugar', normalizedName: 'granulated sugar', quantity: 0.75, unit: 'cups' },
+      { name: 'Eggs', normalizedName: 'eggs', quantity: 2, unit: '' },
+      { name: 'Vanilla extract', normalizedName: 'vanilla extract', quantity: 2, unit: 'tsp' },
+      { name: 'Baking soda', normalizedName: 'baking soda', quantity: 1, unit: 'tsp' },
+      { name: 'Salt', normalizedName: 'salt', quantity: 1, unit: 'tsp' },
+      { name: 'Chocolate chips', normalizedName: 'chocolate chips', quantity: 2, unit: 'cups' },
+    ],
+    instructions: [
+      { stepNumber: 1, text: 'Preheat oven to 190°C (375°F). Line baking sheets with parchment.' },
+      { stepNumber: 2, text: 'Beat softened butter and both sugars until light and fluffy, about 4 minutes.' },
+      { stepNumber: 3, text: 'Beat in eggs one at a time, then vanilla extract.' },
+      { stepNumber: 4, text: 'Whisk together flour, baking soda, and salt. Gradually blend into butter mixture.' },
+      { stepNumber: 5, text: 'Stir in chocolate chips.' },
+      { stepNumber: 6, text: 'Drop rounded tablespoons onto prepared baking sheets, spacing 5cm apart.' },
+      { stepNumber: 7, text: 'Bake 9–11 minutes or until golden brown. Cool on baking sheets for 2 minutes, then transfer.' },
+    ],
+  },
+
+  {
+    title: 'Classic Pancakes',
+    slug: 'classic-pancakes',
+    description:
+      'Light, fluffy, golden pancakes that are perfect for weekend mornings. These come together in minutes and taste incredible with maple syrup and fresh berries.',
+    cuisine: 'American',
+    cuisineRegion: 'American',
+    dietary: 'Eggetarian',           // contains eggs and dairy — not vegan
+    dietaryTags: ['Vegetarian'],
+    mealType: 'Breakfast',
+    difficulty: 'Easy',
+    originalServings: 4,
+    cookingTimeMinutes: 20,
+    tags: ['breakfast', 'quick', 'family'],
+    imageUrl: 'https://images.unsplash.com/photo-1567620905732-2d1ec7ab7445?w=800&q=80',
+    ingredients: [
+      { name: 'All-purpose flour', normalizedName: 'flour', quantity: 2, unit: 'cups' },
+      { name: 'Milk', normalizedName: 'milk', quantity: 1, unit: 'cups' },
+      { name: 'Eggs', normalizedName: 'eggs', quantity: 2, unit: '' },
+      { name: 'Butter', normalizedName: 'butter', quantity: 2, unit: 'tbsp' },
+      { name: 'Sugar', normalizedName: 'sugar', quantity: 2, unit: 'tbsp' },
+      { name: 'Baking powder', normalizedName: 'baking powder', quantity: 2, unit: 'tsp' },
+      { name: 'Salt', normalizedName: 'salt', quantity: 0.5, unit: 'tsp' },
+    ],
+    instructions: [
+      { stepNumber: 1, text: 'Whisk together flour, sugar, baking powder, and salt in a large bowl.' },
+      { stepNumber: 2, text: 'In a separate bowl, beat eggs, milk, and melted butter.' },
+      { stepNumber: 3, text: 'Pour wet ingredients into dry ingredients and stir until just combined — do not overmix.' },
+      { stepNumber: 4, text: 'Heat a non-stick griddle or pan over medium heat. Lightly grease with butter.' },
+      { stepNumber: 5, text: 'Pour approximately 1/4 cup batter per pancake. Cook until bubbles form on surface, then flip.' },
+      { stepNumber: 6, text: 'Cook the other side until golden, about 1–2 minutes. Serve immediately.' },
+    ],
+  },
+
+  {
+    title: 'Honey Garlic Salmon',
+    slug: 'honey-garlic-salmon',
+    description:
+      'Perfectly seared salmon fillets glazed with a sticky honey-garlic sauce. Ready in under 20 minutes, this dish is weeknight dinner perfection.',
+    cuisine: 'American',
+    cuisineRegion: 'American',
+    dietary: 'Non-Vegetarian',       // salmon = fish
+    dietaryTags: ['Gluten-Free'],
+    mealType: 'Dinner',
+    difficulty: 'Easy',
+    originalServings: 4,
+    cookingTimeMinutes: 18,
+    tags: ['fish', 'dinner', 'healthy', 'quick', 'gluten-free'],
+    imageUrl: 'https://images.unsplash.com/photo-1467003909585-2f8a72700288?w=800&q=80',
+    ingredients: [
+      { name: 'Salmon fillets', normalizedName: 'salmon', quantity: 4, unit: 'piece' },
+      { name: 'Honey', normalizedName: 'honey', quantity: 3, unit: 'tbsp' },
+      { name: 'Soy sauce', normalizedName: 'soy sauce', quantity: 2, unit: 'tbsp' },
+      { name: 'Garlic cloves', normalizedName: 'garlic', quantity: 4, unit: 'clove' },
+      { name: 'Butter', normalizedName: 'butter', quantity: 1, unit: 'tbsp' },
+      { name: 'Lemon juice', normalizedName: 'lemon juice', quantity: 1, unit: 'tbsp' },
+      { name: 'Olive oil', normalizedName: 'olive oil', quantity: 1, unit: 'tbsp' },
+    ],
+    instructions: [
+      { stepNumber: 1, text: 'Pat salmon fillets dry and season with salt and pepper.' },
+      { stepNumber: 2, text: 'Whisk together honey, soy sauce, lemon juice, and minced garlic.' },
+      { stepNumber: 3, text: 'Heat olive oil and butter in an oven-safe skillet over medium-high heat.' },
+      { stepNumber: 4, text: 'Sear salmon skin-side up for 3 minutes until golden. Flip carefully.' },
+      { stepNumber: 5, text: 'Pour honey-garlic sauce over salmon. Cook 2 more minutes, basting frequently.' },
+      { stepNumber: 6, text: 'Transfer to oven at 200°C (400°F) for 5 minutes if fillets are thick. Serve immediately.' },
+    ],
+  },
+
+  {
+    title: 'Spaghetti Carbonara',
+    slug: 'spaghetti-carbonara',
+    description:
+      'Authentic Roman pasta carbonara with crispy pancetta, silky egg sauce, and generous Parmesan. No cream needed — the secret is technique.',
+    cuisine: 'Italian',
+    cuisineRegion: 'Italian',
+    dietary: 'Non-Vegetarian',       // pancetta = cured pork
+    dietaryTags: [],
+    mealType: 'Dinner',
+    difficulty: 'Medium',
+    originalServings: 2,
+    cookingTimeMinutes: 25,
+    tags: ['pasta', 'italian', 'dinner', 'quick'],
+    imageUrl: 'https://images.unsplash.com/photo-1612874742237-6526221588e3?w=800&q=80',
+    ingredients: [
+      { name: 'Spaghetti', normalizedName: 'spaghetti', quantity: 200, unit: 'g' },
+      { name: 'Pancetta or bacon', normalizedName: 'pancetta', quantity: 150, unit: 'g' },
+      { name: 'Eggs', normalizedName: 'eggs', quantity: 3, unit: '' },
+      { name: 'Parmesan cheese', normalizedName: 'parmesan', quantity: 100, unit: 'g' },
+      { name: 'Black pepper', normalizedName: 'black pepper', quantity: 1, unit: 'tsp' },
+      { name: 'Salt', normalizedName: 'salt', quantity: 1, unit: 'tsp' },
+    ],
+    instructions: [
+      { stepNumber: 1, text: 'Cook spaghetti in salted boiling water until al dente. Reserve 1 cup pasta water.' },
+      { stepNumber: 2, text: 'Fry pancetta in a large pan until crispy. Remove from heat.' },
+      { stepNumber: 3, text: 'Whisk eggs, grated Parmesan, and black pepper together in a bowl.' },
+      { stepNumber: 4, text: 'Add hot drained pasta to the pancetta pan. Toss off the heat.' },
+      { stepNumber: 5, text: 'Add egg mixture gradually, tossing continuously. Add pasta water as needed for a silky sauce.' },
+      { stepNumber: 6, text: 'Serve immediately topped with extra Parmesan and freshly cracked pepper.' },
+    ],
+  },
+
+  {
+    title: 'Vegetable Stir Fry',
+    slug: 'vegetable-stir-fry',
+    description:
+      'A vibrant, healthy stir fry packed with crisp vegetables in a savory ginger-garlic sauce. Ready in under 15 minutes and endlessly customizable.',
+    cuisine: 'Chinese',
+    cuisineRegion: 'Chinese',
+    dietary: 'Vegan',                // all plant-based ingredients
+    dietaryTags: ['Vegan', 'Gluten-Free'],
+    mealType: 'Dinner',
+    difficulty: 'Easy',
+    originalServings: 3,
+    cookingTimeMinutes: 15,
+    tags: ['vegan', 'healthy', 'quick', 'asian'],
+    imageUrl: 'https://images.unsplash.com/photo-1512058564366-18510be2db19?w=800&q=80',
+    ingredients: [
+      { name: 'Broccoli florets', normalizedName: 'broccoli', quantity: 2, unit: 'cups' },
+      { name: 'Bell peppers', normalizedName: 'bell pepper', quantity: 2, unit: 'piece' },
+      { name: 'Carrots', normalizedName: 'carrot', quantity: 2, unit: 'piece' },
+      { name: 'Snap peas', normalizedName: 'snap peas', quantity: 1, unit: 'cups' },
+      { name: 'Garlic cloves', normalizedName: 'garlic', quantity: 3, unit: 'clove' },
+      { name: 'Ginger', normalizedName: 'ginger', quantity: 1, unit: 'tbsp' },
+      { name: 'Soy sauce', normalizedName: 'soy sauce', quantity: 3, unit: 'tbsp' },
+      { name: 'Sesame oil', normalizedName: 'sesame oil', quantity: 1, unit: 'tbsp' },
+      { name: 'Vegetable oil', normalizedName: 'vegetable oil', quantity: 2, unit: 'tbsp' },
+    ],
+    instructions: [
+      { stepNumber: 1, text: 'Prepare all vegetables: cut broccoli into florets, slice peppers and carrots, mince garlic and ginger.' },
+      { stepNumber: 2, text: 'Whisk together soy sauce, sesame oil, and 2 tbsp water for the sauce.' },
+      { stepNumber: 3, text: 'Heat vegetable oil in a wok or large skillet over high heat until smoking.' },
+      { stepNumber: 4, text: 'Add garlic and ginger, stir-fry 30 seconds until fragrant.' },
+      { stepNumber: 5, text: 'Add harder vegetables (carrots, broccoli) first, stir-fry 3 minutes.' },
+      { stepNumber: 6, text: 'Add remaining vegetables, pour sauce over. Stir-fry 2–3 minutes until crisp-tender. Serve over rice.' },
     ],
   },
 ];

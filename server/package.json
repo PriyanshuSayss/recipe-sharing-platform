@@ -11,6 +11,8 @@
     "test": "vitest run --reporter=verbose",
     "test:watch": "vitest --reporter=verbose",
     "seed": "tsx scripts/seed.ts",
+    "audit:catalog": "tsx scripts/auditCatalog.ts",
+    "audit:dietary": "tsx scripts/auditDietary.ts",
     "lint": "eslint src --ext .ts"
   },
   "dependencies": {
